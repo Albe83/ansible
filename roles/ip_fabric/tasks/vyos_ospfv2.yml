@@ -1,4 +1,5 @@
 - name: configure the remote device
+  connection: network_cli
   vyos.vyos.vyos_config:
     lines:
       - set protocols ospf interface eth1 area '0.0.0.0'

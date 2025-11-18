@@ -18,4 +18,3 @@
     - ip_fabric is defined
     - ansible_os_family == 'VyOS'
   include_tasks: vyos_ospfv2.yml
-  connection: ansible.netcommon.network_cli
