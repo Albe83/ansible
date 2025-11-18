@@ -64,4 +64,4 @@
   service:
     name: nmstate
     enabled: true
-  b
+  become: true
