@@ -28,28 +28,18 @@ protocol ospf v2 ospf_underlay_v2 {
 
   ipv4 {
     import all;
-    export all;
+    export none;
   };
 
   area 0.0.0.0 {
-    interface "loopback0" {
-      cost 10;
-      hello 10;
-      dead 40;
-      retransmit 5;
-      priority 1;
-    };
-
     {% if ip_fabric.fabrics is defined %}
     {% for fabric in ip_fabric.fabrics %}
     interface "{{ fabric.nic }}" {
-      cost {{ fabric.ospf_cost | default(10) }};
-      hello {{ fabric.ospf_hello | default(10) }};
-      dead {{ fabric.ospf_dead | default(40) }};
-      retransmit {{ fabric.ospf_retransmit | default(5) }};
       priority {{ fabric.ospf_priority | default(1) }};
     };
     {% endfor %}
     {% endif %}
+
+    stubnet {{ ip_fabric.loopback.ip }}/32;
   };
 }
