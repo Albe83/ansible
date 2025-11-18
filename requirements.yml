@@ -1,2 +1,4 @@
 ---
-[]
+# requirements.yml
+collections:
+  - name: ns.collvyos.vyos
