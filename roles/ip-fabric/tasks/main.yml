@@ -1,0 +1,5 @@
+- name: Configure underlay interfaces with NMState
+  import_tasks: nmstate.yml
+
+- name: Configure BIRD OSPF
+  import_tasks: bird.yml
