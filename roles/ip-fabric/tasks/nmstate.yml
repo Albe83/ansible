@@ -1,4 +1,39 @@
-- name: Configure loopback0 (router-loopback) via NMState
+---
+# tasks/nmstate.yml
+- name: Ensure nmstate package is installed
+  package:
+    name: nmstate
+    state: present
+  become: true
+
+- name: Ensure NetworkManager is running (nmstate requires it)
+  service:
+    name: NetworkManager
+    state: started
+    enabled: true
+  become: true
+
+- name: Ensure nmstate config directory exists
+  file:
+    path: /etc/nmstate
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: Configure nmstate service options
+  copy:
+    dest: /etc/nmstate/nmstate.conf
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      [service]
+      keep_state_file_after_apply = true
+  become: true
+
+- name: Configure loopback0 (router-loopback / node-loopback) via NMState
   community.nmstate.nmstate:
     state: present
     data: "{{ lookup('template', 'nm_loopback0.yaml.j2') | from_yaml }}"
@@ -11,4 +46,11 @@
     loop_control:
       loop_var: fabric
     data: "{{ lookup('template', 'nm_fabric_iface.yaml.j2') | from_yaml }}"
+  become: true
+
+- name: Start NMState to apply and persists
+  service:
+    name: nmstate
+    state: started
+    enabled: true
   become: true
