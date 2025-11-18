@@ -1,0 +1,7 @@
+- name: configure the remote device
+  vyos.vyos.vyos_config:
+    lines:
+      - set protocols ospf interface eth1 area '0.0.0.0'
+      - set protocols ospf interface eth1 priority '255'
+      - set protocols ospf interface lo area '0.0.0.0'
+      - set protocols ospf interface lo passive

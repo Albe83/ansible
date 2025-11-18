@@ -12,3 +12,9 @@
   when:
     - ip_fabric is defined
     - ansible_os_family == 'RedHat'
+
+- name: Configure OSPF on VyOS devices
+  include_tasks: vyos_ospfv2.yml
+  when:
+    - ip_fabric is defined
+    - ansible_os_family == 'VyOS'
