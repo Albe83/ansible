@@ -4,10 +4,11 @@
       {%- if ip_fabric_underlay_backend != 'auto' -%}
       {{ ip_fabric_underlay_backend }}
       {%- elif
-            ansible_connection not in ['network_cli', 'httpapi', 'netconf']
+            (ansible_connection is not defined
+             or ansible_connection not in ['network_cli', 'httpapi', 'netconf'])
         and (ansible_network_os is not defined)
-        and (ansible_os_family == 'RedHat')
-        and (ansible_distribution in [
+        and (ansible_os_family is defined and ansible_os_family == 'RedHat')
+        and (ansible_distribution is defined and ansible_distribution in [
               'RedHat', 'OracleLinux', 'Rocky', 'AlmaLinux', 'CentOS'
             ])
       -%}
@@ -19,4 +20,3 @@
 - name: Configure IP Fabric underlay with nmstate
   include_tasks: nmstate.yml
   when: ip_fabric_underlay_backend_effective == 'nmstate'
-
