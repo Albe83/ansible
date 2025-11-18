@@ -1,22 +1,8 @@
-- name: Detect underlay backend (auto mode)
-  set_fact:
-    ip_fabric_underlay_backend_effective: >-
-      {%- if ip_fabric_underlay_backend != 'auto' -%}
-      {{ ip_fabric_underlay_backend }}
-      {%- elif
-            (ansible_connection is not defined
-             or ansible_connection not in ['network_cli', 'httpapi', 'netconf'])
-        and (ansible_network_os is not defined)
-        and (ansible_os_family is defined and ansible_os_family == 'RedHat')
-        and (ansible_distribution is defined and ansible_distribution in [
-              'RedHat', 'OracleLinux', 'Rocky', 'AlmaLinux', 'CentOS'
-            ])
-      -%}
-      nmstate
-      {%- else -%}
-      none
-      {%- endif -%}
+---
+# roles/ip-fabric/tasks/main.yml
 
-- name: Configure IP Fabric underlay with nmstate
+- name: "Run nmstate backend if requested"
   include_tasks: nmstate.yml
-  when: ip_fabric_underlay_backend_effective == 'nmstate'
+  when:
+    - ip_fabric is defined
+    - ip_fabric.net_conf_backend | default('none') == 'nmstate'
