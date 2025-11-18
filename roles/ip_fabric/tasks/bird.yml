@@ -39,7 +39,7 @@
 - name: Render BIRD configuration
   template:
     src: bird.conf.j2
-    dest: /etc/bird/bird.conf
+    dest: /etc/bird.conf
     owner: root
     group: root
     mode: "0644"
