@@ -1,0 +1,66 @@
+# BIRD v2 configuration for IP Fabric underlay (OSPF)
+# This file is managed by Ansible. Do not edit manually.
+
+log syslog all;
+log stderr all;
+
+router id {{ ip_fabric.loopback.ip | default('0.0.0.0') }};
+
+protocol device {
+  scan time 10;
+}
+
+protocol kernel kernel4 {
+  ipv4 {
+    import all;
+    export where proto = "ospf_underlay_v2";
+  };
+  persist;
+  scan time 20;
+}
+
+protocol direct direct4 {
+  ipv4;
+}
+
+protocol ospf v2 ospf_underlay_v2 {
+  router id {{ ip_fabric.loopback.ip | default('0.0.0.0') }};
+
+  tick 1;
+  rfc1583compat yes;
+
+  ipv4 {
+    import all;
+    export all;
+  };
+
+  area 0.0.0.0 {
+
+    interface "lo" {
+      passive yes;
+      cost 10;
+      hello 10;
+      dead 40;
+      retransmit 5;
+      priority 1;
+    };
+
+    {% if ip_fabric.fabrics is defined %}
+    {% for fabric in ip_fabric.fabrics %}
+    interface "{{ fabric.nic }}" {
+      cost {{ fabric.ospf_cost | default(10) }};
+      hello {{ fabric.ospf_hello | default(10) }};
+      dead {{ fabric.ospf_dead | default(40) }};
+      retransmit {{ fabric.ospf_retransmit | default(5) }};
+      priority {{ fabric.ospf_priority | default(1) }};
+
+      {% if fabric.ospf_passive | default(false) %}
+      passive yes;
+      {% endif %}
+
+      type {{ fabric.ospf_network_type | default('ptp') }};
+    };
+    {% endfor %}
+    {% endif %}
+  };
+}
