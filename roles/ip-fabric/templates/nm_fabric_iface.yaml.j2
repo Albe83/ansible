@@ -1,0 +1,18 @@
+---
+interfaces:
+  - name: {{ fabric.nic }}
+    alt-names:
+      - name: {{ fabric.name }}
+    type: ethernet
+    state: up
+    description: "Fabric {{ fabric.name | upper }} underlay link (role={{ fabric.role }})"
+    ipv4:
+      enabled: true
+      dhcp: false
+      address:
+        - ip: {{ fabric.ip }}
+          prefix-length: {{ fabric.prefix }}
+    ipv6:
+      enabled: false
+    lldp:
+      enabled: true
