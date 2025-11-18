@@ -1,0 +1,8 @@
+---
+- name: Configure IP Fabric underlay with NMState
+  hosts: ip_fabric_nodes
+  become: true
+  gather_facts: false
+
+  roles:
+    - ip-fabric
