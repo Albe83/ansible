@@ -1,0 +1,19 @@
+---
+interfaces:
+  - name: loopback0
+    alt-names:
+      - name: router-loopback
+      - name: node-loopback
+    type: dummy
+    state: up
+    description: "Router loopback /32 (router-id and BGP nexthop)"
+    ipv4:
+      enabled: true
+      dhcp: false
+      address:
+        - ip: {{ ip_fabric.loopback.ip }}
+          prefix-length: {{ ip_fabric.loopback.prefix }}
+    ipv6:
+      enabled: false
+    lldp:
+      enabled: false
