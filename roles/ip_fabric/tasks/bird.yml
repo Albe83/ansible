@@ -1,0 +1,45 @@
+---
+# tasks/bird.yml
+# Installazione controllata di BIRD senza alterare permanentemente il sistema
+# Requisiti: ansible_os_family == 'RedHat' e routing_backend == 'ospf'
+
+- name: Check if epel-release is installed
+  package_facts:
+  become: true
+
+# EPEL non installato → lo installeremo
+- name: Mark that we will install epel-release
+  set_fact:
+    epel_installed_by_role: true
+  when: "'epel-release' not in ansible_facts.packages"
+
+# Install EPEL solo se manca
+- name: Install epel-release (if missing)
+  package:
+    name: epel-release
+    state: present
+  when: epel_installed_by_role | default(false)
+  become: true
+
+# Installazione di BIRD
+- name: Install BIRD routing daemon
+  package:
+    name: bird
+    state: present
+  become: true
+
+# Attiva il servizio ma non avviarlo ancora (config arriverà dopo)
+- name: Enable BIRD (but keep it stopped until configured)
+  service:
+    name: bird
+    enabled: true
+    state: stopped
+  become: true
+
+# Rimuoviamo EPEL solo se lo abbiamo installato noi
+- name: Remove epel-release if installed by this role
+  package:
+    name: epel-release
+    state: absent
+  when: epel_installed_by_role | default(false)
+  become: true

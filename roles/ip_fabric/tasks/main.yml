@@ -6,3 +6,9 @@
   when:
     - ip_fabric is defined
     - ansible_os_family == 'RedHat'
+
+- name: Install BIRD for OSPF underlay
+  include_tasks: bird.yml
+  when:
+    - ip_fabric is defined
+    - ansible_os_family == 'RedHat'
