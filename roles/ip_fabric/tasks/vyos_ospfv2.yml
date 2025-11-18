@@ -1,5 +1,6 @@
 # Gather all facts
 - name: Gather VyOS facts
+  connection: network_cli
   vyos.vyos.vyos_facts:
     gather_subset: all
     gather_network_resources: all
