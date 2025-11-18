@@ -24,8 +24,6 @@ protocol direct direct4 {
 }
 
 protocol ospf v2 ospf_underlay_v2 {
-  router id {{ ip_fabric.loopback.ip | default('0.0.0.0') }};
-
   tick 1;
   rfc1583compat yes;
 
@@ -35,9 +33,7 @@ protocol ospf v2 ospf_underlay_v2 {
   };
 
   area 0.0.0.0 {
-
-    interface "lo" {
-      passive yes;
+    interface "loopback0" {
       cost 10;
       hello 10;
       dead 40;
@@ -53,12 +49,6 @@ protocol ospf v2 ospf_underlay_v2 {
       dead {{ fabric.ospf_dead | default(40) }};
       retransmit {{ fabric.ospf_retransmit | default(5) }};
       priority {{ fabric.ospf_priority | default(1) }};
-
-      {% if fabric.ospf_passive | default(false) %}
-      passive yes;
-      {% endif %}
-
-      type {{ fabric.ospf_network_type | default('ptp') }};
     };
     {% endfor %}
     {% endif %}
