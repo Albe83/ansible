@@ -1,5 +1,7 @@
 ---
 # tasks/nmstate.yml
+# Tutto ciò che riguarda nmstate: install, config, render dei file e avvio del servizio.
+
 - name: Ensure nmstate package is installed
   package:
     name: nmstate
@@ -33,24 +35,33 @@
       keep_state_file_after_apply = true
   become: true
 
-- name: Configure loopback0 (router-loopback / node-loopback) via NMState
-  community.nmstate.nmstate:
-    state: present
-    data: "{{ lookup('template', 'nm_loopback0.yaml.j2') | from_yaml }}"
+# ---------- RENDER DEGLI STATE FILE ----------
+
+- name: Render loopback0 NMState file
+  template:
+    src: nm_loopback0.yaml.j2
+    dest: /etc/nmstate/ip-fabric-loopback0.yml
+    owner: root
+    group: root
+    mode: '0644'
   become: true
 
-- name: Configure fabric interfaces (blue/green) via NMState
-  community.nmstate.nmstate:
-    state: present
-    loop: "{{ ip_fabric.fabrics }}"
-    loop_control:
-      loop_var: fabric
-    data: "{{ lookup('template', 'nm_fabric_iface.yaml.j2') | from_yaml }}"
+- name: Render fabric NMState files (blue/green)
+  template:
+    src: nm_fabric_iface.yaml.j2
+    dest: "/etc/nmstate/ip-fabric-{{ fabric.name }}.yml"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ ip_fabric.fabrics }}"
+  loop_control:
+    loop_var: fabric
   become: true
 
-- name: Start NMState to apply and persists
+# ---------- AVVIO / RIAPPLICAZIONE ----------
+
+- name: Enable nmstate.service so configs are applied on every boot
   service:
     name: nmstate
-    state: started
     enabled: true
-  become: true
+  b
