@@ -1,2 +1,22 @@
-- name: Configure underlay interfaces with NMState
-  import_tasks: nmstate.yml
+- name: Detect underlay backend (auto mode)
+  set_fact:
+    ip_fabric_underlay_backend_effective: >-
+      {%- if ip_fabric_underlay_backend != 'auto' -%}
+      {{ ip_fabric_underlay_backend }}
+      {%- elif
+            ansible_connection not in ['network_cli', 'httpapi', 'netconf']
+        and (ansible_network_os is not defined)
+        and (ansible_os_family == 'RedHat')
+        and (ansible_distribution in [
+              'RedHat', 'OracleLinux', 'Rocky', 'AlmaLinux', 'CentOS'
+            ])
+      -%}
+      nmstate
+      {%- else -%}
+      none
+      {%- endif -%}
+
+- name: Configure IP Fabric underlay with nmstate
+  include_tasks: nmstate.yml
+  when: ip_fabric_underlay_backend_effective == 'nmstate'
+

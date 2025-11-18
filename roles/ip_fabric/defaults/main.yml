@@ -1,0 +1,5 @@
+# Underlay backend for IP Fabric
+# - auto: infer from OS / connection type
+# - nmstate: force nmstate tasks
+# - none: never run nmstate on this host
+ip_fabric_underlay_backend: auto
