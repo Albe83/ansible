@@ -1,3 +1,9 @@
+# Gather all facts
+- name: Gather VyOS facts
+  vyos.vyos.vyos_facts:
+    gather_subset: all
+    gather_network_resources: all
+
 - name: configure the remote device
   connection: network_cli
   vyos.vyos.vyos_config:
