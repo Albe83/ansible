@@ -1,0 +1,14 @@
+- name: Configure loopback0 (router-loopback) via NMState
+  community.nmstate.nmstate:
+    state: present
+    data: "{{ lookup('template', 'nm_loopback0.yaml.j2') | from_yaml }}"
+  become: true
+
+- name: Configure fabric interfaces (blue/green) via NMState
+  community.nmstate.nmstate:
+    state: present
+    loop: "{{ ip_fabric.fabrics }}"
+    loop_control:
+      loop_var: fabric
+    data: "{{ lookup('template', 'nm_fabric_iface.yaml.j2') | from_yaml }}"
+  become: true
