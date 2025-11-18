@@ -6,6 +6,7 @@ interfaces:
     type: ethernet
     state: up
     description: "Fabric {{ fabric.name | upper }} underlay link (role={{ fabric.role }})"
+    profile-name: {{ fabric.name }}
     ipv4:
       enabled: true
       dhcp: false
