@@ -5,4 +5,4 @@
   include_tasks: nmstate.yml
   when:
     - ip_fabric is defined
-    - ip_fabric.net_conf_backend | default('none') == 'nmstate'
+    - ansible_os_family == 'RedHat'
