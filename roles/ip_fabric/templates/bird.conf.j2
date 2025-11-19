@@ -35,6 +35,8 @@ protocol ospf v2 ospf_underlay_v2 {
     {% if ip_fabric.fabrics is defined %}
     {% for fabric in ip_fabric.fabrics %}
     interface "{{ fabric.nic }}" {
+      hello 1;
+      dead count 3;
       priority {{ fabric.ospf_priority | default(1) }};
     };
     {% endfor %}
