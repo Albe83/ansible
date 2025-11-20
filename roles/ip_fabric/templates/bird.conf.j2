@@ -45,7 +45,7 @@ protocol ospf v2 ospf_underlay_v2 {
     {% for node in groups["ip_fabric_nodes"] %}
       {% for node_fabric in hostvars[node].ip_fabric_node.fabrics %}
         {% if node_fabric.name == fabric.name and node_fabric.role == "spine" %}
-        ip {{ hostvars[node].ip_fabric_node.node.address }};
+        {{ hostvars[node].ip_fabric_node.node.address }};
         {% endif %}
       {% endfor %}
     {% endfor %}
