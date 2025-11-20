@@ -37,19 +37,19 @@ protocol ospf v2 ospf_underlay_v2 {
       {% if fabric.role == "leaf" %}
       priority 0; # Isn't eligible for DR/BDR role
       {% endif %}
+
+      neighbors {
+      {% for node in groups["ip_fabric_nodes"] %}
+        {% for node_fabric in hostvars[node].ip_fabric_node.fabrics %}
+          {% if node_fabric.name == fabric.name and node_fabric.role == "spine" %}
+          {{ hostvars[node].ip_fabric_node.node.address }};
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+      };
     };
 
     stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
-
-    neighbors {
-    {% for node in groups["ip_fabric_nodes"] %}
-      {% for node_fabric in hostvars[node].ip_fabric_node.fabrics %}
-        {% if node_fabric.name == fabric.name and node_fabric.role == "spine" %}
-        {{ hostvars[node].ip_fabric_node.node.address }};
-        {% endif %}
-      {% endfor %}
-    {% endfor %}
-    };
 
   };
   {% endfor %}
