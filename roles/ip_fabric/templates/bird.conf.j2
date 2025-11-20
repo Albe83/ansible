@@ -22,6 +22,15 @@ protocol direct direct4 {
   ipv4;
 }
 
+protocol bfd {
+  {% for fabric in {{ ip_fabric_node.fabrics }} %}
+  interface {{ fabric.interface }} {
+    interval {{ ip_fabrics[fabric.name].bfd.interval | default("50 ms") }};
+    multiplier {{ ip_fabrics[fabric.name].bfd.multiplier | default("3") }};
+  };
+  {% endfor %}
+}
+
 protocol ospf v2 ospf_underlay_v2 {
 
   ipv4 {
@@ -30,7 +39,6 @@ protocol ospf v2 ospf_underlay_v2 {
   };
 
   area 0 {
-    # stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
     # Node Fabric
     interface {{ ip_fabric_node.node.address }} {
       stub on;
@@ -45,6 +53,7 @@ protocol ospf v2 ospf_underlay_v2 {
       {% if fabric.role == "leaf" %}
       priority 0;  # Isn't eligible for DR/BDR role
       {% endif %}
+      bfd {{ ip_fabrics[fabric.name].bfd.enabled | default("off") }};
     };
     {% endfor %}
 
