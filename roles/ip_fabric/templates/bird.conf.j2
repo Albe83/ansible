@@ -23,10 +23,10 @@ protocol direct direct4 {
 }
 
 protocol bfd {
-  {% for fabric in {{ ip_fabric_node.fabrics }} %}
+  {% for fabric in ip_fabric_node.fabrics %}
   interface "{{ fabric.interface }}" {
-    interval 10 ms;
-    multiplier 3;
+    interval {{ ip_fabrics[fabric.name].bfd.interval | default("300 ms") }};
+    multiplier {{ ip_fabrics[fabric.name].bfd.multiplier | default("3") }};
   };
   {% endfor %}
 }
@@ -53,7 +53,7 @@ protocol ospf v2 ospf_underlay_v2 {
       {% if fabric.role == "leaf" %}
       priority 0;  # Isn't eligible for DR/BDR role
       {% endif %}
-      bfd on;
+      bfd {{ ip_fabrics[fabric.name].bfd.enabled }};
     };
     {% endfor %}
 
