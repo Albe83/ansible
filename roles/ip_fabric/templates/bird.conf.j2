@@ -53,7 +53,11 @@ protocol ospf v2 ospf_underlay_v2 {
       {% if fabric.role == "leaf" %}
       priority 0;  # Isn't eligible for DR/BDR role
       {% endif %}
-      bfd {{ ip_fabrics[fabric.name].bfd.enabled }};
+      {% if ip_fabrics[fabric.name].bfd.enabled %}
+      bfd on;
+      {% else %}
+      bfd off;
+      {% endif %}
     };
     {% endfor %}
 
