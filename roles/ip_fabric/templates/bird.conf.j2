@@ -4,7 +4,7 @@
 log syslog all;
 log stderr all;
 
-router id {{ ip_fabric.loopback.ip | default('0.0.0.0') }};
+router id {{ ip_fabric_node.node.address }};
 
 protocol device {
   scan time 10;
@@ -23,25 +23,22 @@ protocol direct direct4 {
 }
 
 protocol ospf v2 ospf_underlay_v2 {
-  tick 1;
-  rfc1583compat yes;
 
   ipv4 {
     import all;
     export none;
   };
 
-  area 0.0.0.0 {
-    {% if ip_fabric.fabrics is defined %}
-    {% for fabric in ip_fabric.fabrics %}
-    interface "{{ fabric.nic }}" {
-      hello 1;
-      dead count 3;
-      priority {{ fabric.ospf_priority | default(1) }};
-    };
-    {% endfor %}
-    {% endif %}
-
-    stubnet {{ ip_fabric.loopback.ip }}/32;
+  {% for fabric in ip_fabric_node.fabrics %}
+  area {{ ip_fabrics[fabric.name].igp.ospf.area | default(ip_fabrics[fabric.name].prefix.address) }} {
+    interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
+      stub on;
+      dead 1;
+      {{% if fabric.role == "leaf" %}}
+      priority 1;
+      {{% endif %}}
+    }
+    stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }}
   };
+  {% endfor %}
 }

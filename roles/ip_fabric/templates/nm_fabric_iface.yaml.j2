@@ -1,6 +1,6 @@
 ---
 interfaces:
-  - name: {{ fabric.nic }}
+  - name: {{ fabric.network.interface }}
     alt-names:
       - name: {{ fabric.name }}
     type: ethernet
@@ -11,8 +11,8 @@ interfaces:
       enabled: true
       dhcp: false
       address:
-        - ip: {{ fabric.ip }}
-          prefix-length: {{ fabric.prefix }}
+        - ip: {{ fabric.network.address }}
+          prefix-length: {{ fabric.network.length }}
     ipv6:
       enabled: false
     lldp:

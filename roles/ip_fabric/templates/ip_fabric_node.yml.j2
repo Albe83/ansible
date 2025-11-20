@@ -1,0 +1,19 @@
+---
+interfaces:
+  - name: {{ ip_fabric_node.node.interface }}
+    alt-names:
+      - name: ip-fabric-node
+    type: dummy
+    state: up
+    description: "IP Fabric Node interface"
+    profile-name: ip-fabric-node
+    ipv4:
+      enabled: true
+      dhcp: false
+      address:
+        - ip: {{ ip_fabric_node.node.address }}
+          prefix-length: {{ ip_fabric_node.node.length }}
+    ipv6:
+      enabled: false
+    lldp:
+      enabled: false

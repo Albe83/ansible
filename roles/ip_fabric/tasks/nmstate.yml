@@ -39,23 +39,23 @@
 
 - name: Render loopback0 NMState file
   template:
-    src: nm_loopback0.yaml.j2
-    dest: /etc/nmstate/ip-fabric-loopback0.yml
+    src: ip_fabric_node.yml.j2
+    dest: /etc/nmstate/ip_fabric_node.yml
     owner: root
     group: root
     mode: '0644'
   become: true
 
 - name: Render fabric NMState files (blue/green)
+  loop: "{{ ip_fabric_node.fabrics }}"
+  loop_control:
+    loop_var: fabric
   template:
     src: nm_fabric_iface.yaml.j2
     dest: "/etc/nmstate/ip-fabric-{{ fabric.name }}.yml"
     owner: root
     group: root
     mode: '0644'
-  loop: "{{ ip_fabric.fabrics }}"
-  loop_control:
-    loop_var: fabric
   become: true
 
 # ---------- AVVIO / RIAPPLICAZIONE ----------

@@ -4,17 +4,17 @@
 - name: "Run nmstate backend if requested"
   include_tasks: nmstate.yml
   when:
-    - ip_fabric is defined
+    - ip_fabric_node is defined
     - ansible_os_family == 'RedHat'
 
 - name: Install BIRD for OSPF underlay
   include_tasks: bird.yml
   when:
-    - ip_fabric is defined
+    - ip_fabric_node is defined
     - ansible_os_family == 'RedHat'
 
 - name: Configure OSPF on VyOS devices
   when:
-    - ip_fabric is defined
+    - ip_fabric_node is defined
     - ansible_os_family == 'VyOS'
   include_tasks: vyos_ospfv2.yml
