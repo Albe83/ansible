@@ -30,7 +30,12 @@ protocol ospf v2 ospf_underlay_v2 {
   };
 
   area 0 {
-    stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
+    # stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
+    # Node Fabric
+    interface {{ ip_fabric_node.node.address }} {
+      stub on;
+      priority 0;
+    };
 
     {% for fabric in ip_fabric_node.fabrics %}
     # Fabric {{ fabric.name }}
