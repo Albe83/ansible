@@ -32,13 +32,25 @@ protocol ospf v2 ospf_underlay_v2 {
   {% for fabric in ip_fabric_node.fabrics %}
   area {{ ip_fabrics[fabric.name].igp.ospf.area | default(ip_fabrics[fabric.name].prefix.address) }} {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
-      stub on;
-      dead 2;
+      stub on; # Passive interface
+      dead 2; # Peer is gone after 2s
       {% if fabric.role == "leaf" %}
-      priority 1;
+      priority 0; # Isn't eligible for DR/BDR role
       {% endif %}
     };
+
     stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
+
+    neighbors {
+    {% for node in groups["ip_fabric_nodes"] %}
+      {% for node_fabric in hostvars[node].ip_fabric_node.fabrics %}
+        {% if node_fabric.name == fabric.name and node_fabric.role == "spine" %}
+        ip {{ hostvars[node].ip_fabric_node.node.address }};
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    };
+
   };
   {% endfor %}
 }
