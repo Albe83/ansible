@@ -39,7 +39,7 @@ protocol ospf v2 ospf_underlay_v2 {
 
     {% for fabric in ip_fabric_node.fabrics %}
     # Fabric {{ fabric.name }}
-    interface "{{ fabric.network.interface }}" {
+    interface {{ fabric.network.address }} {
       hello 1;  # Send Hello Packet every 1s
       dead 2;   # Peer is gone after 2s
       {% if fabric.role == "leaf" %}
