@@ -34,7 +34,7 @@ protocol ospf v2 ospf_underlay_v2 {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
       hello 1; # Send Hello Packet every 1s
       dead 2; # Peer is gone after 2s
-      {%- if fabric.role == "leaf" -%}priority 0; # Isn't eligible for DR/BDR role{%- endif -%}
+      {% if fabric.role == "leaf" -%}priority 0; # Isn't eligible for DR/BDR role{%- endif %}
     };
 
     # Announce Node address to the Fabric
