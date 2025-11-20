@@ -25,8 +25,8 @@ protocol direct direct4 {
 protocol bfd {
   {% for fabric in {{ ip_fabric_node.fabrics }} %}
   interface "{{ fabric.interface }}" {
-    interval {{ ip_fabrics[fabric.name].bfd.interval | default("50 ms") }};
-    multiplier {{ ip_fabrics[fabric.name].bfd.multiplier | default("3") }};
+    interval 10 ms;
+    multiplier 3;
   };
   {% endfor %}
 }
