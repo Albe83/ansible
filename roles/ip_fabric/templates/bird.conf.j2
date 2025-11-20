@@ -41,7 +41,7 @@ protocol ospf v2 ospf_underlay_v2 {
 
     # Announce Node address to the Fabric
     stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
-
   };
+  
   {%- endfor %}
 }
