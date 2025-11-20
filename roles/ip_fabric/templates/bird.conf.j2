@@ -29,28 +29,19 @@ protocol ospf v2 ospf_underlay_v2 {
     export none;
   };
 
-  {% for fabric in ip_fabric_node.fabrics %}
+  {%i- for fabric in ip_fabric_node.fabrics -%}
   area {{ ip_fabrics[fabric.name].igp.ospf.area | default(ip_fabrics[fabric.name].prefix.address) }} {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
-      stub on; # Passive interface
+      hello 1; # Send Hello Packet every 1s
       dead 2; # Peer is gone after 2s
-      {% if fabric.role == "leaf" %}
-      priority 0; # Isn't eligible for DR/BDR role
-      {% endif %}
+      {%- if fabric.role == "leaf" -%}priority 0; # Isn't eligible for DR/BDR role{%- endif -%}
 
-      neighbors {
-      {% for node in groups["ip_fabric_nodes"] %}
-        {% for node_fabric in hostvars[node].ip_fabric_node.fabrics %}
-          {% if node_fabric.name == fabric.name and node_fabric.role == "spine" %}
-          {{ hostvars[node].ip_fabric_node.node.address }};
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-      };
     };
 
+    # Announce Node address to the Fabric
     stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
 
   };
-  {% endfor %}
+  
+  {%- endfor -%}
 }
