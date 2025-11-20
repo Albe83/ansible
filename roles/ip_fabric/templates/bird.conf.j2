@@ -33,7 +33,7 @@ protocol ospf v2 ospf_underlay_v2 {
   area {{ ip_fabrics[fabric.name].igp.ospf.area | default(ip_fabrics[fabric.name].prefix.address) }} {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
       stub on;
-      dead 1;
+      dead 2;
       {% if fabric.role == "leaf" %}
       priority 1;
       {% endif %}
