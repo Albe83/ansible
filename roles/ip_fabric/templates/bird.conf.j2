@@ -29,7 +29,7 @@ protocol ospf v2 ospf_underlay_v2 {
     export none;
   };
 
-  {%i- for fabric in ip_fabric_node.fabrics -%}
+  {%- for fabric in ip_fabric_node.fabrics -%}
   area {{ ip_fabrics[fabric.name].igp.ospf.area | default(ip_fabrics[fabric.name].prefix.address) }} {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
       hello 1; # Send Hello Packet every 1s
