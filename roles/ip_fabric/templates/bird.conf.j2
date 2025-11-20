@@ -37,8 +37,8 @@ protocol ospf v2 ospf_underlay_v2 {
       {% if fabric.role == "leaf" %}
       priority 1;
       {% endif %}
-    }
-    stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }}
+    };
+    stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }};
   };
   {% endfor %}
 }
