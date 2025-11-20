@@ -34,9 +34,9 @@ protocol ospf v2 ospf_underlay_v2 {
     interface {{ ip_fabrics[fabric.name].prefix.address }}/{{ ip_fabrics[fabric.name].prefix.length }} {
       stub on;
       dead 1;
-      {{% if fabric.role == "leaf" %}}
+      {% if fabric.role == "leaf" %}
       priority 1;
-      {{% endif %}}
+      {% endif %}
     }
     stubnet {{ ip_fabric_node.node.address }}/{{ ip_fabric_node.node.length }}
   };
