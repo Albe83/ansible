@@ -1,0 +1,8 @@
+---
+- name: Configure RKE2 Cluster
+  hosts: rke2_cluster_nodes
+  become: true
+  gather_facts: true
+
+  roles:
+    - rke2_cluster
