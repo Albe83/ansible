@@ -1,0 +1,6 @@
+# roles/rke2_cluster/tasks/main.yml
+
+- name: "Create a RKE2 Cluster"
+  when:
+    - rke2_cluster_node is defined
+  include_tasks: rke2_cluster.yml

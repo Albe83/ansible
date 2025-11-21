@@ -1,5 +1,5 @@
 ---
-# roles/ip-fabric/tasks/main.yml
+# roles/ip_fabric/tasks/main.yml
 
 - name: "Run nmstate backend if requested"
   include_tasks: nmstate.yml

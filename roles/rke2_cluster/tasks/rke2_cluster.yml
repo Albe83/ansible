@@ -1,0 +1,9 @@
+---
+
+- name: Install RKE2 on Node
+  ansible.builtin.command: curl -sfL https://get.rke2.io | sh -
+  environment:
+    INSTALL_RKE2_TYPE: "{% ( {{ rke2_cluster_node.role}} | default('agent') ) %}"
+    INSTALL_RKE2_VERSION: "{% {{ rke2_clusters[rke2_cluster_node.cluster].version }} | default('') %}"
+    INSTALL_RKE2_CHANNEL_URL: "{% {{ rke2_clusters[rke2_cluster_node.cluster].url }} | default('') %}"
+    INSTALL_RKE2_CHANNEL: "{% {{ rke2_clusters[rke2_cluster_node.cluster].channel }} | default('') %}"
