@@ -7,23 +7,26 @@
   package_facts:
   become: true
 
-- name: Checking BIRD installation status
+- name: Define bird_installed fact
+  set_fact:
+    bird_installed: true
+
+- name: Define epel_installed fact
+  set_fact:
+    epel_installed: true
+
+- name: Checking for BIRD installation status
   when:
     - "'bird' not in ansible_facts.packages"
   set_fact:
     bird_installed: false
-  else:
-    - set_fact:
-        bird_installed: true
 
-- name: Checking EPEL installation status
+- name: Checking for EPEL installation status
   when:
     - "'epel-release' not in ansible_facts.packages"
   set_fact:
     epel_installed: false
-  else:
-    - set_fact:
-        epel_installed: true
+
 
 - name: Install EPEL if needed
   when:
