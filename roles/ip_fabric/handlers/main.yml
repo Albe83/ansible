@@ -1,0 +1,6 @@
+handlers:
+  - name: BIRD Configuration changed, a restart is needed
+    listen: bird_config_changed
+    service:
+      name: bird
+      state: restarted
