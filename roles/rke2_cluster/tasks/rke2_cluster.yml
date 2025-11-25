@@ -37,7 +37,7 @@
     group: root
     mode: "0644"
 
-- name: Deploy vip-kube-apiserver-hc@.timer
+- name: Install Unit vip-kube-apiserver-hc@.timer
   when:
     - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
   ansible.builtin.template:
