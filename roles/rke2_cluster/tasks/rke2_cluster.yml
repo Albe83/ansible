@@ -1,16 +1,8 @@
 ---
-- name: Download RKE2 install script
-  ansible.builtin.get_url:
-    url: https://get.rke2.io
-    dest: /usr/local/sbin/rke2-install.sh
-    mode: '0755'
-  become: true
-
-- name: Run RKE2 installer
-  ansible.builtin.command: /usr/local/sbin/rke2-install.sh
-  environment:
-    INSTALL_RKE2_TYPE: "{{ rke2_cluster_node.role | default('agent') }}"
-    INSTALL_RKE2_VERSION: "{{ rke2_clusters[rke2_cluster_node.cluster].version | default('') }}"
-    INSTALL_RKE2_CHANNEL_URL: "{{ rke2_clusters[rke2_cluster_node.cluster].url | default('') }}"
-    INSTALL_RKE2_CHANNEL: "{{ rke2_clusters[rke2_cluster_node.cluster].channel | default('') }}"
+- id: add_rke2_repo
+  name: Add RKE2 repository configuration
+  ansible.builtin.template:
+    src: rancher-rke2.repo.j2
+    dest: /etc/yum.repos.d/rancher-rke2.repo
+    mode: '0644'
   become: true
