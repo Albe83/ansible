@@ -22,7 +22,7 @@
     - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
   ansible.builtin.template:
     src: vip-kube-apiserver@.service.j2
-    dest: /etc/systemd/system/vip@.service
+    dest: /etc/systemd/system/vip-kube-apiserver@.service
     owner: root
     group: root
     mode: "0644"
