@@ -1,0 +1,11 @@
+[Unit]
+Description=VIP %i on loopback0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/ip address replace %i/32 dev loopback0
+ExecStop=/usr/sbin/ip address delete %i/32 dev loopback0
+
+[Install]
+WantedBy=multi-user.target

@@ -16,22 +16,33 @@
     name:
       - rke2-server
 
-- name: Deploy kube-apiserver-health@.service
+
+- name: Install Unit vip-kube-apiserver@.service
   when:
     - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
   ansible.builtin.template:
-    src: kube-apiserver-health.service.j2
-    dest: /etc/systemd/system/kube-apiserver-health@.service
+    src: vip-kube-apiserver@.service.j2
+    dest: /etc/systemd/system/vip@.service
     owner: root
     group: root
     mode: "0644"
 
-- name: Deploy kube-apiserver-health@.timer
+- name: Install Unit vip-kube-apiserver-hc@.service
   when:
     - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
   ansible.builtin.template:
-    src: kube-apiserver-health.timer.j2
-    dest: /etc/systemd/system/kube-apiserver-health@.timer
+    src: vip-kube-apiserver-hc@.service.j2
+    dest: /etc/systemd/system/vip-kube-apiserver-hc@.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Deploy vip-kube-apiserver-hc@.timer
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  ansible.builtin.template:
+    src: vip-kube-apiserver-hc@.timer.j2
+    dest: /etc/systemd/system/vip-kube-apiserver-hc@.timer
     owner: root
     group: root
     mode: "0644"
@@ -41,6 +52,22 @@
     - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
   ansible.builtin.systemd:
     daemon_reload: true
+
+- name: Enable and start VIP timer
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  ansible.builtin.systemd:
+    name: "vip-kube-apiserver-hc@{{ vip_address }}.timer"
+    enabled: false
+    state: started
+
+
+
+
+
+
+
+
 
 
 
