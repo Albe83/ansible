@@ -1,35 +1,7 @@
-# RKE2 node configuration - managed by Ansible. Do NOT edit manually.
 
-# Cluster-wide settings
-token: "{{ rke2_clusters[rke2_cluster_node.cluster].token }}"
-write-kubeconfig-mode: "0644"
-cni: "{{ rke2_clusters[rke2_cluster_node.cluster].cni | default('canal') }}"
-
-node-name: "{{ inventory_hostname }}"
-
-node-label:
-  - "cluster={{ rke2_cluster_node.cluster }}"
-  - "role={{ rke2_cluster_node.role }}"
-{% for label in rke2_cluster_node.labels | default([]) %}
-  - "{{ label }}"
-{% endfor %}
-
-{% if rke2_cluster_node.taints | default([]) %}
-node-taint:
-{% for taint in rke2_cluster_node.taints %}
-  - "{{ taint }}"
-{% endfor %}
-{% endif %}
-
-{% if rke2_cluster_node.role == 'agent' %}
-# Agent-specific: connect to server
-server: "{{ rke2_clusters[rke2_cluster_node.cluster].server_url }}"
-{% endif %}
-
-{% if rke2_cluster_node.role == 'server' %}
-# Server-specific options
-tls-san:
-{% for san in rke2_clusters[rke2_cluster_node.cluster].tls_san | default([]) %}
-  - "{{ san }}"
-{% endfor %}
-{% endif %}
+# Listener
+node-name: {{ ansible_hostname }}
+node-ip: {{ rke2_cluster_node.address }}
+node-external-ip: {{ rke2_cluster_node.address }}
+bind-address: {{ rke2_cluster_node.address }}
+advertise-address: {{ rke2_cluster_node.address }}
