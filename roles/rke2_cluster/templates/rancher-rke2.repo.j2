@@ -1,0 +1,19 @@
+{%- set rke2_version = rke2_clusters[rke2_cluster_node.cluster].rke2.version-%}
+{%- set rke2_channel_url = ( rke2_clusters[rke2_cluster_node.cluster].rke2.channel_url | default('https://rpm.rancher.io', true) ) -%}
+{%- set rke2_channel = ( rke2_clusters[rke2_cluster_node.cluster].rke2.channel | default('stable', true) ) -%}
+
+[rancher-rke2-common-{{ rke2_channel }}]
+name=Rancher RKE2 Common ({{ rke2_channel }})
+baseurl={{ rke2_channel_url }}/rke2/{{ rke2_channel }}/common/centos/$releasever_major/noarch
+enabled=0
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey={{ rke2_channel_url }}/public.key
+
+[rancher-rke2-{{ rke2_version }}-{{ rke2_channel }}]
+name=Rancher RKE2 {{ rke2_version }} ({{ rke2_channel }})
+baseurl={{ rke2_channel_url }}/rke2/{{ rke2_channel }}/{{ rke2_version }}/centos/$releasever_major/$basearch
+enabled=0
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey={{ rke2_channel_url }}/public.key
