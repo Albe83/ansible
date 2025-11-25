@@ -2,6 +2,7 @@
 {%- set wait_interval = "60s" -%}
 [Unit]
 Description=Periodic health check for kube-apiserver VIP %i
+PartOf=vip-kube-apiserver@%i.service
 
 [Timer]
 # Check kube-apiserver health status...
