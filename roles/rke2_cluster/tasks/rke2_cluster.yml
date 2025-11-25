@@ -59,7 +59,7 @@
   ansible.builtin.systemd:
     name: vip-kube-apiserver-hc@{{ rke2_clusters[rke2_cluster_node.cluster].vip.address }}.timer
     enabled: false
-    state: started
+    state: stopped
 
 
 
