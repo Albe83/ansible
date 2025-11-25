@@ -9,7 +9,7 @@ Type=oneshot
 ExecStart=/bin/sh -c '\
   HEALTH_CHECK_CMD=/bin/true; \
   if $($HEALTH_CHECK_CMD); then \
-    systemctl is-active --quiet vip@%i.service || systemctl start vip@%i.service; \
+    systemctl is-active --quiet vip-kube-apiserver@%i.service || systemctl start vip-kube-apiserver@%i.service; \
   else \
-    systemctl is-active --quiet vip@%i.service && systemctl stop vip@%i.service; \
+    systemctl is-active --quiet vip-kube-apiserver@%i.service && systemctl stop vip-kube-apiserver@%i.service; \
   fi'
