@@ -1,6 +1,13 @@
+{%- set check_interval = "30s" -%}
+{%- set wait_interval = "60s" -%}
 [Unit]
 Description=Periodic health check for kube-apiserver VIP %i
 
 [Timer]
-OnActiveSec=1s
-OnUnitActiveSec=60s
+# Check kube-apiserver health status...
+Unit=vip-kube-apiserver-hc@%i.service
+# ...every {{ check_interval }}
+OnActiveSec={{ check_interval }}
+
+# Waiting for start checking
+OnUnitActiveSec={{ wait_interval }}
