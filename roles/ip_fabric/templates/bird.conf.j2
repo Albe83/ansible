@@ -40,8 +40,8 @@ protocol ospf v2 igp_ospf_v2 {
   };
 
   area 0 {
-    # Node Fabric
-    interface {{ ip_fabric_node.node.address }} {
+    # Node Fabric: advertise all addresses of this interface
+    interface "{{ ip_fabric_node.node.interface }}" {
       stub on;
       priority 0;
     };
