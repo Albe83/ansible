@@ -1,0 +1,17 @@
+{%- set vip_interface = "loopback0" -%}
+{%- set vip_health_timeout = "2" -%}
+{%- set vip_health_url = "https://127.0.0.1:6443/healthz" -%}
+[Unit]
+Description=Health check for kube-apiserver VIP %i
+After=network-online.target rke2-server.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+
+ExecStart=/bin/sh -c '\
+  if curl -k --silent --max-time {{ vip_health_timeout }} {{ vip_health_url }} | grep -q "ok"; then \
+    ip addr replace %i/32 dev {{ vip_interface }}; \
+  else \
+    ip addr delete %i/32 dev {{ vip_interface }} 2>/dev/null || true; \
+  fi'

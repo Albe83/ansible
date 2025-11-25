@@ -16,6 +16,34 @@
     name:
       - rke2-server
 
+- name: Deploy kube-apiserver-health@.service
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  ansible.builtin.template:
+    src: kube-apiserver-health.service.j2
+    dest: /etc/systemd/system/kube-apiserver-health@.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Deploy kube-apiserver-health@.timer
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  ansible.builtin.template:
+    src: kube-apiserver-health@.timer.j2
+    dest: /etc/systemd/system/kube-apiserver-health@.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Reload systemd units
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+
+
 - name: Install RKE2 Agent package on worker hosts
   when:
     - ( rke2_cluster_node.role | default('agent', true) ) in ['agent' ]

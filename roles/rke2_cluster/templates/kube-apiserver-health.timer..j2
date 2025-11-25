@@ -1,0 +1,25 @@
+{%- set vip_health_onboot = "180s" -%}
+{%- set vip_health_interval = "60s" -%}
+[Unit]
+Description=Periodic health check for kube-apiserver VIP %i
+
+# This unit is started/stopped together with rke2-server.service
+PartOf=rke2-server.service
+
+# This unit must start only after rke2-server is running.
+After=rke2-server.service
+
+[Timer]
+
+# Invoke unit every...
+Unit=kube-apiserver-health@%i.service
+# ... {{ vip_health_interval  }} seconds.
+OnUnitActiveSec={{ vip_health_interval  }}
+
+# Waiting for rke-server is up.
+OnActiveSec={{ vip_health_onboot  }}
+
+[Install]
+# This timer is wanted by rke2-server.service:
+# when rke2-server starts, this timer also starts.
+WantedBy=rke2-server.service
