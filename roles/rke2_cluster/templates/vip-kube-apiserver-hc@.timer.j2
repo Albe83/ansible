@@ -7,7 +7,7 @@ Description=Periodic health check for kube-apiserver VIP %i
 # Check kube-apiserver health status...
 Unit=vip-kube-apiserver-hc@%i.service
 # ...every {{ check_interval }}
-OnActiveSec={{ check_interval }}
+OnUnitActiveSec={{ check_interval }}
 
 # Waiting for start checking
-OnUnitActiveSec={{ wait_interval }}
+OnActiveSec={{ wait_interval }}
