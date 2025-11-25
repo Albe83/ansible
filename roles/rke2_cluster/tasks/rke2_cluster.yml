@@ -5,3 +5,23 @@
     dest: /etc/yum.repos.d/rancher-rke2.repo
     mode: '0644'
   become: true
+
+- name: Install RKE2 Server package on control plane hosts
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['server', 'bootstrapper' ]
+  become: true
+  ansible.builtin.dnf:
+    enablerepo: "rancher-rke2-*"
+    state: present
+    name:
+      - rke2-server
+
+- name: Install RKE2 Agent package on worker hosts
+  when:
+    - ( rke2_cluster_node.role | default('agent', true) ) in ['agent' ]
+  become: true
+  ansible.builtin.dnf:
+    enablerepo: "rancher-rke2-*"
+    state: present
+    name:
+      - rke2-agent
