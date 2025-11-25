@@ -1,6 +1,5 @@
 ---
-- id: add_rke2_repo
-  name: Add RKE2 repository configuration
+- name: Add RKE2 repository configuration
   ansible.builtin.template:
     src: rancher-rke2.repo.j2
     dest: /etc/yum.repos.d/rancher-rke2.repo
