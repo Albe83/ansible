@@ -1,15 +1,20 @@
+{%- set hc_command = "/bin/true" -%}
+{%- set vip_service_name = "vip-kube-apiserver@%i.service" -%}
 [Unit]
 Description=Health check for kube-apiserver VIP %i
+
 After=network-online.target
 Wants=network-online.target
 
-
 [Service]
 Type=oneshot
+
+ExecCondition=/bin/sh -c 'systemctl --quiet is-active {{ vip_service_name }}'
+
 ExecStart=/bin/sh -c '\
-  HEALTH_CHECK_CMD=/bin/true; \
+  HEALTH_CHECK_CMD="{{ hc_command }}"; \
   if $($HEALTH_CHECK_CMD); then \
-    systemctl is-active --quiet vip-kube-apiserver@%i.service || systemctl start vip-kube-apiserver@%i.service; \
+    systemctl is-active --quiet {{ vip_service_name }} || systemctl start {{ vip_service_name }}; \
   else \
-    systemctl is-active --quiet vip-kube-apiserver@%i.service && systemctl stop vip-kube-apiserver@%i.service; \
+    systemctl is-active --quiet {{ vip_service_name }} && systemctl stop {{ vip_service_name }}; \
   fi'

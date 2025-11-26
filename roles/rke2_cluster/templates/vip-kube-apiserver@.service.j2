@@ -1,11 +1,19 @@
+{%- set interface = "loopback0" -%}
 [Unit]
-Description=VIP %i on loopback0
+Description=VIP %i on {{ interface }}
+
+# Start only if network interface is active
+Requires=sys-subsystem-net-devices-{{ interface }}.device
+After=sys-subsystem-net-devices-{{ interface }}.device
+
+# Stop if network interface goes down
+BindsTo=sys-subsystem-net-devices-{{ interface }}.device
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/sbin/ip address replace %i/32 dev loopback0
-ExecStop=/usr/sbin/ip address delete %i/32 dev loopback0
+ExecStart=/usr/sbin/ip address replace %i/32 dev {{ interface }}
+ExecStop=/usr/sbin/ip address delete %i/32 dev {{ interface }}
 
 [Install]
 WantedBy=multi-user.target

@@ -2,6 +2,8 @@
 {%- set wait_interval = "60s" -%}
 [Unit]
 Description=Periodic health check for kube-apiserver VIP %i
+
+# Stop if kube-apiserver VIP service becomes inactive
 BindsTo=vip-kube-apiserver@%i.service
 
 [Timer]
