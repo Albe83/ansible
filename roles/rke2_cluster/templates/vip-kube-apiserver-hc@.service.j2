@@ -13,11 +13,11 @@ Type=oneshot
 ExecCondition=/bin/sh -c 'systemctl --quiet is-active {{ vip_service_name }}'
 
 # Performing health check
-# If health check passes and VIP service is inactive, start VIP service
-# If health check fails and VIP service is active, stop VIP service
+# If health check passes, ensure VIP service is started
+# If health check fails, ensure VIP service is stopped
 ExecStart=/bin/sh -c '\
   if {{ hc_command }}; then \
-    systemctl start {{ vip_service_name }}; \
-  else \
-    systemctl stop {{ vip_service_name }}; \
+    systemctl --quiet start {{ vip_service_name }}; \
+  else \ 
+    systemctl --quiet stop {{ vip_service_name }}; \
   fi'
