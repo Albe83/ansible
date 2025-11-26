@@ -18,6 +18,6 @@ ExecCondition=/bin/sh -c 'systemctl --quiet is-active {{ vip_service_name }}'
 ExecStart=/bin/sh -c '\
   if {{ hc_command }}; then \
     systemctl --quiet start {{ vip_service_name }}; \
-  else \ 
+  else \
     systemctl --quiet stop {{ vip_service_name }}; \
   fi'
