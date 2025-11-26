@@ -9,12 +9,15 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 
+# Skipping health check if VIP service is inactive
 ExecCondition=/bin/sh -c 'systemctl --quiet is-active {{ vip_service_name }}'
 
+# Performing health check
+# If health check passes and VIP service is inactive, start VIP service
+# If health check fails and VIP service is active, stop VIP service
 ExecStart=/bin/sh -c '\
-  HEALTH_CHECK_CMD="{{ hc_command }}"; \
-  if $($HEALTH_CHECK_CMD); then \
-    systemctl is-active --quiet {{ vip_service_name }} || systemctl start {{ vip_service_name }}; \
+  if {{ hc_command }}; then \
+    systemctl start {{ vip_service_name }}; \
   else \
-    systemctl is-active --quiet {{ vip_service_name }} && systemctl stop {{ vip_service_name }}; \
+    systemctl stop {{ vip_service_name }}; \
   fi'
