@@ -1,0 +1,9 @@
+# playbooks/net_mgmt.yml
+---
+- name: Configure network management
+  hosts: net_mgmt
+  become: true
+  gather_facts: true
+
+  roles:
+    - net_mgmt

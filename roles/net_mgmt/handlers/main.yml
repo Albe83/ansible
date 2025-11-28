@@ -1,0 +1,8 @@
+# handlers/main.yml
+---
+- name: Apply nmstate configuration
+  listen: nmstate_config_changed
+  become: true
+  service:
+    name: nmstate
+    state: restarted

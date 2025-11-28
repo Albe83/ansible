@@ -1,0 +1,19 @@
+# tasks/main.yml
+---
+- name: Merge net_mgmt defaults with overrides
+  set_fact:
+    net_mgmt: "{{ __net_mgmt_defaults | combine(net_mgmt | default({}), recursive=True) }}"
+
+- name: Install & Configure LLDP
+  when:
+    - net_mgmt.enable | bool
+    - ansible_facts.os_family in ["RedHat"]
+    - net_mgmt.lldp.enabled | bool
+  include_tasks: lldp.yml
+
+- name: Install & Configure NMState
+  when:
+    - net_mgmt.enable | bool
+    - ansible_facts.os_family in ["RedHat"]
+    - net_mgmt.nmstate.enabled | bool
+  include_tasks: nmstate.yml

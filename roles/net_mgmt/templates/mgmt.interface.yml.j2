@@ -1,0 +1,51 @@
+{%- set mgmt_nic = net_mgmt.interface -%}
+{%- set mgmt_ip = net_mgmt.address | mandatory(msg: "Management IP address is required. Set it via net_mgmt.address.") -%}
+{%- set mgmt_prefix_length = net_mgmt.prefix_length | mandatory(msg: "Management network prefix length is required. Set it via net_mgmt.prefix_length.") -%}
+{%- set mgmt_gateway = net_mgmt.gateway -%}
+{%- set mgmt_lldp = net_mgmt.lldp.enabled -%}
+{%- set table_id = 253 -%}
+{%- set pbr_priority_unknown_src = 1 -%}
+{%- set pbr_priority_mgmt_src = table_id -%}
+
+interfaces:
+  - name: {{ mgmt_nic }}
+    description: Management interface
+    state: up
+    alt-names:
+      - name: mgmt
+    profile-name: management
+    lldp:
+      enabled: {{ mgmt_lldp }}
+    ipv4:
+      enabled: true
+      dhcp: false
+      address:
+        - ip: {{ mgmt_ip }}
+          prefix-length: {{ mgmt_prefix_length }}
+    ipv6:
+      enabled: false
+
+routes:
+  config:
+    - destination: 0.0.0.0/0
+      state: absent
+
+    {% if mgmt_gateway != "0.0.0.0" -%}
+    - destination: 0.0.0.0/0
+      next-hop-address: {{ mgmt_gateway }}
+      next-hop-interface: {{ mgmt_nic }}
+      table-id: {{ table_id }}
+    {%- endif %}
+
+    - destination: {{ mgmt_ip }}/{{ mgmt_prefix_length }}
+      next-hop-interface: {{ mgmt_nic }}
+      table-id: {{ table_id }}
+route-rules:
+  config:
+    - ip-from: 0.0.0.0/32
+      route-table: {{ table_id }}
+      priority: {{ pbr_priority_unknown_src }}
+
+    - ip-from: {{ mgmt_ip }}/{{ mgmt_prefix_length }}
+      route-table: {{ table_id }}
+      priority: {{ pbr_priority_mgmt_src }}

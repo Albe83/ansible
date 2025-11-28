@@ -1,0 +1,43 @@
+# tasks/nmstate.yml
+---
+- name: Ensure nmstate package is installed
+  become: true
+  package:
+    name: nmstate
+    state: present
+
+- name: Enabling NMState Service
+  become: true
+  service:
+    name: nmstate
+    enabled: true
+
+- name: Ensure nmstate config directory exists
+  become: true
+  file:
+    path: /etc/nmstate
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Configure nmstate service
+  become: true
+  copy:
+    dest: /etc/nmstate/nmstate.conf
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      [service]
+      keep_state_file_after_apply = true
+
+- name: Rendering management interface configuration
+  become: true 
+  template:
+    src: mgmt.interface.yml.j2
+    dest: /etc/nmstate/mgmt.interface.yml
+    owner: root
+    group: root
+    mode: '0644'
+  notify: nmstate_config_changed

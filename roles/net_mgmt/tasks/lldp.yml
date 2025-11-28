@@ -1,0 +1,18 @@
+# tasks/lldp.yml
+---
+- name: Ensure lldpd package is installed
+  when:
+    - net_mgmt.lldp.backend == "lldpd"
+  become: true
+  package:
+    name: lldpd
+    state: present
+
+- name: Ensure lldpd service is running
+  when:
+    - net_mgmt.lldp.backend == "lldpd"
+  become: true
+  service:
+    name: lldpd
+    state: started
+    enabled: true
