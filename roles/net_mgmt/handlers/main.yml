@@ -6,3 +6,10 @@
   service:
     name: nmstate
     state: restarted
+
+- name: Apply lldpd configuration
+  listen: lldpd_config_changed
+  become: true
+  service:
+    name: lldpd
+    state: restarted

@@ -6,14 +6,13 @@
 
 - name: Install & Configure LLDP
   when:
-    - net_mgmt.enable | bool
     - ansible_facts.os_family in ["RedHat"]
     - net_mgmt.lldp.enabled | bool
-  include_tasks: lldp.yml
+    - net_mgmt.lldp.backend in ["lldpd"]
+  include_tasks: lldpd.yml
 
 - name: Install & Configure NMState
   when:
-    - net_mgmt.enable | bool
     - ansible_facts.os_family in ["RedHat"]
     - net_mgmt.nmstate.enabled | bool
   include_tasks: nmstate.yml

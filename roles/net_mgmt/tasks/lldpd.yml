@@ -1,0 +1,37 @@
+# tasks/lldp.yml
+---
+- name: Ensure lldpd package is installed
+  when:
+    - net_mgmt.lldp.backend == "lldpd"
+  become: true
+  package:
+    name: lldpd
+    state: present
+
+- name: Ensure lldpd service is running
+  when:
+    - net_mgmt.lldp.backend == "lldpd"
+  become: true
+  service:
+    name: lldpd
+    state: started
+    enabled: true
+
+- name: Ensure lldpd config directory exists
+  become: true
+  file:
+    path: /etc/lldpd.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Rendering management interface configuration
+  become: true 
+  template:
+    src: mgmt.lldpd.conf.j2
+    dest: /etc/lldpd.d/mgmt.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: lldpd_config_changed
