@@ -1,7 +1,7 @@
 # playbooks/net_mgmt.yml
 ---
-- name: Configure network management
-  hosts: net_mgmt
+- name: Configure Out-of-Band Management Network Devices
+  hosts: oob_mgmt
   become: true
   gather_facts: true
 

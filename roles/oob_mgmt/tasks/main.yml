@@ -1,18 +1,18 @@
 # tasks/main.yml
 ---
-- name: Merge net_mgmt defaults with overrides
+- name: Merge oob_mgmt defaults with overrides
   set_fact:
-    net_mgmt: "{{ __net_mgmt_defaults | combine(net_mgmt | default({}), recursive=True) }}"
+    oob_mgmt: "{{ __oob_mgmt_defaults | combine(oob_mgmt | default({}), recursive=True) }}"
 
 - name: Install & Configure LLDP
   when:
     - ansible_facts.os_family in ["RedHat"]
-    - net_mgmt.lldp.enabled | bool
-    - net_mgmt.lldp.backend in ["lldpd"]
+    - oob_mgmt.lldp.enabled | bool
+    - oob_mgmt.lldp.backend in ["lldpd"]
   include_tasks: lldpd.yml
 
 - name: Install & Configure NMState
   when:
     - ansible_facts.os_family in ["RedHat"]
-    - net_mgmt.nmstate.enabled | bool
+    - oob_mgmt.nmstate.enabled | bool
   include_tasks: nmstate.yml

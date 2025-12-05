@@ -1,8 +1,8 @@
-{%- set mgmt_nic = net_mgmt.interface -%}
-{%- set mgmt_ip = net_mgmt.address | mandatory(msg: "Management IP address is required. Set it via net_mgmt.address.") -%}
-{%- set mgmt_prefix_length = net_mgmt.prefix_length | mandatory(msg: "Management network prefix length is required. Set it via net_mgmt.prefix_length.") -%}
-{%- set mgmt_gateway = net_mgmt.gateway -%}
-{%- set mgmt_lldp = net_mgmt.lldp.enabled -%}
+{%- set mgmt_nic = oob_mgmt.interface -%}
+{%- set mgmt_ip = oob_mgmt.address | mandatory(msg: "Management IP address is required. Set it via oob_mgmt.address.") -%}
+{%- set mgmt_prefix_length = oob_mgmt.prefix_length | mandatory(msg: "Management network prefix length is required. Set it via oob_mgmt.prefix_length.") -%}
+{%- set mgmt_gateway = oob_mgmt.gateway -%}
+{%- set mgmt_lldp = oob_mgmt.lldp.enabled -%}
 {%- set table_id = 253 -%}
 {%- set pbr_priority_unknown_src = 1 -%}
 {%- set pbr_priority_mgmt_src = table_id -%}
